@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.drawer_layout)
     DrawerLayout drawer_layout;
     private SharedPreferences sp;
+    private  Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        Intent intent;
+
         switch (id){
             case R.id.tongzhi:
                 intent = new Intent(MainActivity.this,NoticeActivity.class);
@@ -105,6 +106,8 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_setting:
                 break;
             case R.id.nav_about:
+                 intent = new Intent(MainActivity.this,AboutActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;

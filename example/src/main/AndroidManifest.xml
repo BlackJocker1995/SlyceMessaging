@@ -20,6 +20,11 @@
         <activity android:name="ui.MainActivity"/>
         <activity android:name="ui.loginAndRegister.RegisterActivity"/>
         <activity android:name=".SendActivity"/>
+        <activity android:name="ui.AboutActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ui.MainActivity"/>
+        </activity>
         <activity android:name="ui.NoticeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
