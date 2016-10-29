@@ -33,8 +33,10 @@ public class LoginActivity extends AppCompatActivity {
     CardView cv;
     @Bind(R.id.fab)
     FloatingActionButton fab;
-    @Bind(R.id.remember)
+    @Bind(R.id.remember_pass)
     CheckBox remember;
+    @Bind(R.id.login_auto)
+    CheckBox login_auto;
 
     private SharedPreferences sp;
 
@@ -44,26 +46,47 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         sp = this.getSharedPreferences("userinfo", MODE_ENABLE_WRITE_AHEAD_LOGGING);//获得实例对象
-
-        if (sp.getBoolean("ISCHECK", false)) {
-            username.setText(sp.getString("USER_NAME", ""));
-            userpassword.setText(sp.getString("PASSWORD", ""));
+        //自动登陆
+        if(sp.getBoolean("AUTO",false)){
+            TestLogin(sp.getString("user_name", ""), sp.getString("password", ""));
+            Intent i2 = new Intent(this, MainActivity.class);
+            startActivity(i2);
+            finish();
+            return;
+        }
+        //是否记住密码
+        if (sp.getBoolean("REM", false)) {
+            username.setText(sp.getString("user_name", ""));
+            userpassword.setText(sp.getString("password", ""));
             remember.setChecked(true);
         } else {
-            username.setText(sp.getString("USER_NAME", ""));
+            username.setText(sp.getString("user_name", ""));
             userpassword.setText("");
         }
 
         remember.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (remember.isChecked()) {
-                    sp.edit().putBoolean("ISCHECK", true).commit();
+                if (compoundButton.isChecked()) {
+                    sp.edit().putBoolean("REM", true).commit();
                 } else {
-                    sp.edit().putBoolean("ISCHECK", false).commit();
+                    sp.edit().putBoolean("REM", false).commit();
+                    sp.edit().putBoolean("AUTO", false).commit();
+                    login_auto.setChecked(false);
                 }
             }
         });
+        login_auto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (remember.isChecked()) {
+                    sp.edit().putBoolean("AUTO", true).commit();
+                } else {
+                    sp.edit().putBoolean("AUTO", false).commit();
+                }
+            }
+        });
+
     }
 
     private boolean TestLogin(String stUserName, String stPassWord) {
@@ -90,9 +113,9 @@ public class LoginActivity extends AppCompatActivity {
                 if (TestLogin(stUserName, stPassWord)) {
                     Intent i2 = new Intent(this, MainActivity.class);
                     startActivity(i2);
-                    if (sp.getBoolean("ISCHECK", false)) {
-                        sp.edit().putString("USER_NAME", stUserName).commit();
-                        sp.edit().putString("PASSWORD", stPassWord).commit();
+                    if (sp.getBoolean("REM", false)) {
+                        sp.edit().putString("user_name", stUserName).commit();
+                        sp.edit().putString("password", stPassWord).commit();
                     }
                     finish();
                     break;

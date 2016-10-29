@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity
     RecyclerView mRecyclerView;
     @Bind(R.id.drawer_layout)
     DrawerLayout drawer_layout;
+
     private SharedPreferences sp;
     private  Intent intent;
 
