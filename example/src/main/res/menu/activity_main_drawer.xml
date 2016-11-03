@@ -15,6 +15,11 @@
             android:title="通知"
             android:icon="@drawable/ic_menu_slideshow"
             />
+        <item
+            android:id="@+id/search"
+            android:title="查找好友"
+            android:icon="@drawable/ic_menu_send"
+            />
     </group>
 
     <item android:title="Communicate">

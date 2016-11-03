@@ -110,6 +110,10 @@ public class MainActivity extends AppCompatActivity
                  intent = new Intent(MainActivity.this,AboutActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.search:
+                intent = new Intent(MainActivity.this,SearchActivity.class);
+                startActivity(intent);
+                break;
             default:
                 break;
         }
