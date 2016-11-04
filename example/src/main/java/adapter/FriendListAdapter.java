@@ -29,6 +29,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private Context mContext;
     public ArrayList<Friends> friends;
     private SharedPreferences sp;
+
     public FriendListAdapter(Context context) {
         SetFriend();
         mContext = context;
@@ -95,5 +96,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public int getItemCount() {
         return friends.size();
     }
+
+
 }
 

@@ -10,8 +10,6 @@ public class Friends implements Comparable{
     private int  messageNumber;
     private Boolean online;
 
-
-
     public Friends(String name, int peopleID, String icon, Boolean online, int messageNumber) {
         this.name = name;
         this.peopleID = peopleID;

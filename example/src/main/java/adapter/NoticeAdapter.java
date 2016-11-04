@@ -96,7 +96,6 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         });
         materialDialog.show();
-
     }
 
     private void cancel() {
