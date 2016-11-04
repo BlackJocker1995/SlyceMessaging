@@ -13,11 +13,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import it.snipsnap.slyce_messaging_example.R;
 import it.snipsnap.slyce_messaging_example.SendActivity;
+import netwrok.FriendNet;
 import value.Friends;
 
 /**
@@ -48,6 +53,16 @@ public class FriendListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         friends.add(new Friends("张三",1,"https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5",true,2));
         friends.add(new Friends("张三",1,"https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5",true,0));
 
+    }
+
+    public void network(String url) {
+        Type type = new TypeToken<ArrayList<Friends>>() {}.getType();
+        ArrayList<Friends> jsonObjects = new Gson().fromJson(url, type);
+
+        for (Friends infoitem : jsonObjects)
+        {
+            friends.add(0,infoitem);
+        }
     }
     //判断当前item类型
     @Override

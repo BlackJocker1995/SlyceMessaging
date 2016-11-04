@@ -1,11 +1,15 @@
 package ui.loginAndRegister;
 
 import android.app.ActivityOptions;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
@@ -14,6 +18,13 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.gson.Gson;
+import netwrok.HttpThreadString;
+import netwrok.Userinfo;
 import ui.MainActivity;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,19 +50,21 @@ public class LoginActivity extends AppCompatActivity {
     CheckBox login_auto;
 
     private SharedPreferences sp;
-
+    Handler handler;
+    ProgressDialog proDialog;
+    String stUserName;
+    String stPassWord;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         sp = this.getSharedPreferences("userinfo", MODE_ENABLE_WRITE_AHEAD_LOGGING);//获得实例对象
+        CreateHandler();
+
         //自动登陆
         if(sp.getBoolean("AUTO",false)){
             TestLogin(sp.getString("user_name", ""), sp.getString("password", ""));
-            Intent i2 = new Intent(this, MainActivity.class);
-            startActivity(i2);
-            finish();
             return;
         }
         //是否记住密码
@@ -62,6 +75,8 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             username.setText(sp.getString("user_name", ""));
             userpassword.setText("");
+            login_auto.setChecked(false);
+            remember.setChecked(false);
         }
 
         remember.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -83,13 +98,49 @@ public class LoginActivity extends AppCompatActivity {
                     sp.edit().putBoolean("AUTO", true).commit();
                 } else {
                     sp.edit().putBoolean("AUTO", false).commit();
+                    sp.edit().putBoolean("REM", false).commit();
+                    remember.setChecked(false);
                 }
             }
         });
 
     }
 
+    private void CreateHandler() {
+        handler=new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                Bundle b=msg.getData();
+                String test=b.getString("state");
+                if(test.contains("user_id"))
+                {
+                    proDialog.dismiss();
+                    Intent i2 = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(i2);
+
+                    Gson gson = new Gson();
+                    Userinfo userinfo = gson.fromJson(test, Userinfo.class);
+
+                    sp.edit().putString("user_password", stPassWord).commit();
+                    sp.edit().putString("user_name", userinfo.getUser_name()).commit();
+                    sp.edit().putInt("user_id", userinfo.getUser_id()).commit();
+                    finish();
+                }else{
+                    Snackbar.make(getWindow().getDecorView(),"登陆失败",Snackbar.LENGTH_SHORT).show();
+                    proDialog.dismiss();
+                }
+            }
+        };
+    }
+
     private boolean TestLogin(String stUserName, String stPassWord) {
+        Map map=new HashMap();
+        map.put("method","login.php");
+        map.put("login_mail", "" + stUserName);
+        map.put("login_passwd", "" + stPassWord);
+        new HttpThreadString(handler,getApplicationContext(),map,proDialog).start();
+        createProgressBar();
         return true;
     }
 
@@ -121,5 +172,24 @@ public class LoginActivity extends AppCompatActivity {
                     break;
                 }
         }
+    }
+    private void createProgressBar() {
+        proDialog = android.app.ProgressDialog.show(LoginActivity.this, "请等待", "数据传送中！");
+        Thread thread = new Thread()
+        {
+            public void run()
+            {
+                try
+                {
+                    sleep(5000);
+                } catch (InterruptedException e)
+                {
+                    // TODO 自动生成的 catch 块
+                    e.printStackTrace();
+                }
+                proDialog.dismiss();//不写会程序会卡死。
+            }
+        };
+        thread.start();
     }
 }
