@@ -9,15 +9,7 @@ import android.content.Context;
 public class App extends Application {
 
     public static Context mContext;
-    String url="";
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
+    public static String url="http://192.168.1.240:8080";
 
     @Override
     public void onCreate() {

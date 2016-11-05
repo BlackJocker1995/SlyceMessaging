@@ -12,24 +12,25 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gson.Gson;
-import netwrok.HttpThreadString;
-import netwrok.Userinfo;
-import ui.MainActivity;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import it.snipsnap.slyce_messaging_example.R;
+import netwrok.HttpThreadString;
+import ui.MainActivity;
+import value.User_test;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -65,6 +66,8 @@ public class LoginActivity extends AppCompatActivity {
         //自动登陆
         if(sp.getBoolean("AUTO",false)){
             TestLogin(sp.getString("user_name", ""), sp.getString("password", ""));
+            remember.setChecked(true);
+            login_auto.setChecked(true);
             return;
         }
         //是否记住密码
@@ -113,18 +116,19 @@ public class LoginActivity extends AppCompatActivity {
                 super.handleMessage(msg);
                 Bundle b=msg.getData();
                 String test=b.getString("state");
-                if(test.contains("user_id"))
+                Log.i("logintest",""+test);
+                if(test.contains("id"))
                 {
                     proDialog.dismiss();
                     Intent i2 = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(i2);
 
                     Gson gson = new Gson();
-                    Userinfo userinfo = gson.fromJson(test, Userinfo.class);
+                    User_test userinfo = gson.fromJson(test, User_test.class);
 
                     sp.edit().putString("user_password", stPassWord).commit();
-                    sp.edit().putString("user_name", userinfo.getUser_name()).commit();
-                    sp.edit().putInt("user_id", userinfo.getUser_id()).commit();
+                    sp.edit().putString("user_name", userinfo.getName()).commit();
+                    sp.edit().putInt("user_id", userinfo.getId()).commit();
                     finish();
                 }else{
                     Snackbar.make(getWindow().getDecorView(),"登陆失败",Snackbar.LENGTH_SHORT).show();
@@ -136,9 +140,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean TestLogin(String stUserName, String stPassWord) {
         Map map=new HashMap();
-        map.put("method","login.php");
-        map.put("login_mail", "" + stUserName);
-        map.put("login_passwd", "" + stPassWord);
+        map.put("method","userInfo.action");
+        map.put("email", "" + stUserName);
+        map.put("password", "" + stPassWord);
         new HttpThreadString(handler,getApplicationContext(),map,proDialog).start();
         createProgressBar();
         return true;
@@ -161,16 +165,8 @@ public class LoginActivity extends AppCompatActivity {
             case R.id.bt_go:
                 String stUserName = username.getText().toString();
                 String stPassWord = userpassword.getText().toString();
-                if (TestLogin(stUserName, stPassWord)) {
-                    Intent i2 = new Intent(this, MainActivity.class);
-                    startActivity(i2);
-                    if (sp.getBoolean("REM", false)) {
-                        sp.edit().putString("user_name", stUserName).commit();
-                        sp.edit().putString("password", stPassWord).commit();
-                    }
-                    finish();
-                    break;
-                }
+                TestLogin(stUserName, stPassWord);
+                break;
         }
     }
     private void createProgressBar() {

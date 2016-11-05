@@ -40,8 +40,9 @@ public class HttpThreadString extends Thread{
         this.handler = handler;
         this.context = context;
         this.map = map;
-        this.url=((App)context.getApplicationContext()).getUrl()+"Controller/"+map.get("method");
+        this.url=(App.url+"/VServer/"+map.get("method"));
         this.proDialog=proDialog;
+        Log.i("HttpStart","Http has start");
     }
 
     public JSONObject createJSON(){
@@ -79,8 +80,9 @@ public class HttpThreadString extends Thread{
             outputStream.write(result.getBytes());
             outputStream.close();
 
-
+            Log.i("response", connection.getResponseCode() + "");
             if(connection.getResponseCode()==200){
+                Log.i("response",connection.getResponseCode()+"");
                 BufferedReader bufferedReader =new BufferedReader(new InputStreamReader
                         (connection.getInputStream())) ;
                 String line=null;
