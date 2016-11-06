@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.AccelerateInterpolator;
@@ -70,7 +71,9 @@ public class RegisterActivity extends AppCompatActivity {
             super.handleMessage(msg);
             Bundle b = msg.getData();
             String test=b.getString("state");
+            Log.i("state",String.valueOf(test.contains("state")));
             if(test.contains("state")){
+                proDialog.dismiss();
                 animateRevealClose();
             }
 
@@ -96,6 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 animateRevealClose();
             }
         });

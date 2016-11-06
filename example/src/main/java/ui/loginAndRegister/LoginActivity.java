@@ -73,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
         //是否记住密码
         if (sp.getBoolean("REM", false)) {
             username.setText(sp.getString("user_name", ""));
+            String a  = sp.getString("user_name", "");
             userpassword.setText(sp.getString("user_password", ""));
             remember.setChecked(true);
         } else {
@@ -130,6 +131,7 @@ public class LoginActivity extends AppCompatActivity {
                     sp.edit().putString("user_password", stPassWord).commit();
                     sp.edit().putString("user_name", stUserName).commit();
                     sp.edit().putInt("user_id", userinfo.getId()).commit();
+                    sp.edit().putString("user_icon",userinfo.getAvatar());
                     finish();
                 }else{
                     Snackbar.make(getWindow().getDecorView(),"登陆失败",Snackbar.LENGTH_SHORT).show();
@@ -164,8 +166,8 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(this, RegisterActivity.class), options.toBundle());
                 break;
             case R.id.bt_go:
-                String stUserName = username.getText().toString();
-                String stPassWord = userpassword.getText().toString();
+                 stUserName = username.getText().toString();
+                 stPassWord = userpassword.getText().toString();
                 TestLogin(stUserName, stPassWord);
                 break;
         }

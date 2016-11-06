@@ -65,4 +65,12 @@ public class Friend implements Comparable{
             return 1;
         return 0;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Friend f = (Friend)obj;
+        if(this.friendid ==f.friendid)
+            return true;
+        return  false;
+    }
 }

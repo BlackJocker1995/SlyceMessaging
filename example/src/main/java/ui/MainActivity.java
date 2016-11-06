@@ -92,6 +92,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        onRefresh();
+    }
+
     public void onRefresh() {
         int stid = sp.getInt("user_id",0);
         Map map=new HashMap();

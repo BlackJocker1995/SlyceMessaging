@@ -37,12 +37,13 @@ public class HttpThreadString extends Thread{
     public  ProgressDialog proDialog;
 
     public HttpThreadString(Handler handler, Context context, Map map, ProgressDialog proDialog) {
+        if(handler!=null)
         this.handler = handler;
         this.context = context;
         this.map = map;
         this.url=(App.url+"/VServer/"+map.get("method"));
         this.proDialog=proDialog;
-        Log.i("HttpStart","Http has start");
+        Log.i("HttpStart","url");
     }
 
     public JSONObject createJSON(){
@@ -62,6 +63,10 @@ public class HttpThreadString extends Thread{
 
     public void run()
     {
+        if(isInterrupted())
+        {
+            return;
+        }
         try{
             URL httpUrl=new URL(url);
             HttpURLConnection connection = (HttpURLConnection) httpUrl.openConnection();
@@ -97,14 +102,16 @@ public class HttpThreadString extends Thread{
                 Bundle b = new Bundle();// 存放数据
                 b.putString("state", "" + stringBuffer.toString());
                 msg.setData(b);
+                if(handler!=null)
                 handler.sendMessage(msg);
             }
             else{
                 Log.i("logintest",""+"http_fail");
                 Message msg = new Message();
                 Bundle b = new Bundle();// 存放数据
-                b.putString("state","失败"+connection.getResponseCode());
+                b.putString("state", "失败" + connection.getResponseCode());
                 msg.setData(b);
+                if(handler!=null)
                 handler.sendMessage(msg);
             }
         } catch (MalformedURLException e) {

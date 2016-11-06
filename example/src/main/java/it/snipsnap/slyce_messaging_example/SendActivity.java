@@ -1,99 +1,86 @@
 package it.snipsnap.slyce_messaging_example;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.slyce.messaging.SlyceMessagingFragment;
-import it.slyce.messaging.listeners.LoadMoreMessagesListener;
 import it.slyce.messaging.listeners.UserSendsMessageListener;
-import it.slyce.messaging.message.MediaMessage;
-import it.slyce.messaging.message.Message;
 import it.slyce.messaging.message.MessageSource;
 import it.slyce.messaging.message.TextMessage;
+import netwrok.HttpThreadString;
+import value.MyMessage;
 
 public class SendActivity extends AppCompatActivity {
     private Intent intent;
-    private static String[] latin = {
-            "Vestibulum dignissim enim a mauris malesuada fermentum. Vivamus tristique consequat turpis, pellentesque.",
-            "Quisque nulla leo, venenatis ut augue nec, dictum gravida nibh. Donec augue nisi, volutpat nec libero.",
-            "Cras varius risus a magna egestas.",
-            "Mauris tristique est eget massa mattis iaculis. Aenean sed purus tempus, vestibulum ante eget, vulputate mi. Pellentesque hendrerit luctus tempus. Cras feugiat orci.",
-            "Morbi ullamcorper, sapien mattis viverra facilisis, nisi urna sagittis nisi, at luctus lectus elit.",
-            "Phasellus porttitor fermentum neque. In semper, libero id mollis.",
-            "Praesent fermentum hendrerit leo, ac rutrum ipsum vestibulum at. Curabitur pellentesque augue.",
-            "Mauris finibus mi commodo molestie placerat. Curabitur aliquam metus vitae erat vehicula ultricies. Sed non quam nunc.",
-            "Praesent vel velit at turpis vestibulum eleifend ac vehicula leo. Nunc lacinia tellus eget ipsum consequat fermentum. Nam purus erat, mollis sed ullamcorper nec, efficitur.",
-            "Suspendisse volutpat enim eros, et."
-    };
+    private int sendid;
+    private int recid;
+    private String sendicon;
+    private String recicon;
+    private SharedPreferences sp;
 
-    private static String[] urls = {
-            "http://en.l4c.me/fullsize/googleplex-mountain-view-california-1242979177.jpg",
-            "http://entropymag.org/wp-content/uploads/2014/10/outer-space-wallpaper-pictures.jpg",
-            "http://www.bolwell.com/wp-content/uploads/2013/09/bolwell-metal-fabrication-raw-material.jpg",
-            "http://www.bytscomputers.com/wp-content/uploads/2013/12/pc.jpg",
-            "https://content.edmc.edu/assets/modules/ContentWebParts/AI/Locations/New-York-City/startpage-masthead-slide.jpg"
-    };
+    private Map getmap;
+    private Map sendmap;
+    private HttpThreadString httpThreadString;
 
     private volatile static int n = 0;
+    private Handler getMessHandler;
+    ScheduledExecutorService scheduleTaskExecutor;
 
     SlyceMessagingFragment slyceMessagingFragment;
 
     private boolean hasLoadedMore;
-    private static Message getRandomMessage() {
-        n++;
-        Message message;
-        if (Math.random() < 1.1) {
-            TextMessage textMessage = new TextMessage();
-            textMessage.setText(n + ": " + latin[(int) (Math.random() * 10)]);
-            message = textMessage;
-        } else {
-            MediaMessage mediaMessage = new MediaMessage();
-            mediaMessage.setUrl(urls[(int)(Math.random() * 5)]);
-            message = mediaMessage;
-        }
-        message.setDate(new Date().getTime());
-        if (Math.random() > 0.5) {
-            message.setAvatarUrl("https://lh3.googleusercontent.com/-Y86IN-vEObo/AAAAAAAAAAI/AAAAAAAKyAM/6bec6LqLXXA/s0-c-k-no-ns/photo.jpg");
-            message.setUserId("LP");
-            message.setSource(MessageSource.EXTERNAL_USER);//用户信息
-        } else {
-            message.setAvatarUrl("https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5");
-            message.setUserId("MP");
-            message.setSource(MessageSource.LOCAL_USER);//接受的信息
-        }
-        return message;
-    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(it.snipsnap.slyce_messaging_example.R.layout.activity_send);
-        intent = getIntent();
-        hasLoadedMore = false;
         ButterKnife.bind(this);
+        sp = this.getSharedPreferences("userinfo", MODE_ENABLE_WRITE_AHEAD_LOGGING);//获得实例对象
+        intent = getIntent();
+        this.recid = intent.getIntExtra("personid", 0);
+        this.sendid = sp.getInt("user_id", -1);
+        this.recicon = intent.getStringExtra("icon");
+        this.sendicon = sp.getString("user_icon", "");
+        hasLoadedMore = false;
+
+        CreateMap();
+        CreateHandler();
 
         //默认Url
         slyceMessagingFragment = (SlyceMessagingFragment) getFragmentManager().findFragmentById(R.id.fragment_for_slyce_messaging);
-        slyceMessagingFragment.setDefaultAvatarUrl("https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5");//头像
+        slyceMessagingFragment.setDefaultAvatarUrl(this.sendicon);//头像
         slyceMessagingFragment.setDefaultDisplayName("user");//显示默认名字
-        slyceMessagingFragment.setDefaultUserId(intent.getStringExtra("ACCEPT"));//userid
+        slyceMessagingFragment.setDefaultUserId(sp.getString("user_name", ""));//userid
 
         slyceMessagingFragment.setOnSendMessageListener(new UserSendsMessageListener() {
             @Override
             public void onUserSendsTextMessage(String text) {
                 //发送信息
                 Log.d("inf", "******************************** " + text);
+                sendmap.put("content", text);
+                HttpThreadString send = new HttpThreadString(null, SendActivity.this, sendmap, null);
+                send.start();
+                // sendMessage(text);
             }
 
             @Override
@@ -102,42 +89,76 @@ public class SendActivity extends AppCompatActivity {
                 Log.d("inf", "******************************** " + imageUri);
             }
         });
-        slyceMessagingFragment.setLoadMoreMessagesListener(new LoadMoreMessagesListener() {
-            @Override
-            public List<Message> loadMoreMessages() {
-                Log.d("info", "loadMoreMessages()");
+//        slyceMessagingFragment.setLoadMoreMessagesListener(new LoadMoreMessagesListener() {
+//            @Override
+//            public List<Message> loadMoreMessages() {
+//               List<Message> list  =new ArrayList<Message>();
+//                list.add(new TextMessage());
+//                return list;
+//            }
+//        });
+        slyceMessagingFragment.setMoreMessagesExist(false);
 
-                if (!hasLoadedMore) {
-                    hasLoadedMore = true;
-                    ArrayList<Message>  messages = new ArrayList<>();
-                    for (int i = 0; i < 25; i++)
-                        messages.add(getRandomMessage());//加载聊天记录的
-                    Log.d("info", "loadMoreMessages() returns");
-                    return messages;
-                } else {
-                    slyceMessagingFragment.setMoreMessagesExist(false);
-                    return new ArrayList<>();
-                }
-            }
-        });
-        slyceMessagingFragment.setMoreMessagesExist(true);
-        //LoadMoreMessage
-        ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
-        scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                TextMessage textMessage = new TextMessage();
-                textMessage.setText("Another message...");
-                textMessage.setAvatarUrl("https://lh3.googleusercontent.com/-Y86IN-vEObo/AAAAAAAAAAI/AAAAAAAKyAM/6bec6LqLXXA/s0-c-k-no-ns/photo.jpg");//头像
-                textMessage.setDisplayName("Gary Johnson");
-                textMessage.setUserId("LP");
-                textMessage.setDate(new Date().getTime());
-                textMessage.setSource(MessageSource.EXTERNAL_USER);
-                //添加新消息
-                slyceMessagingFragment.addNewMessage(textMessage);
-
-            }
-        }, 3, 3, TimeUnit.SECONDS);
+        //lodeNewInfo
+        scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
+        httpThreadString=new HttpThreadString(getMessHandler,this, getmap, null);
+        scheduleTaskExecutor.scheduleAtFixedRate( httpThreadString, 3, 3, TimeUnit.SECONDS);
     }
 
+    private void CreateMap() {
+        getmap=new HashMap();
+        getmap.put("method","getMessage.action");
+        getmap.put("uid", "" + sendid);
+        getmap.put("tid", "" + recid);
+        sendmap = new HashMap();
+        sendmap.put("method","sendMessage.action");
+        sendmap.put("uid", "" + sendid);
+        sendmap.put("tid", "" + recid);
+        sendmap.put("type", "TEXT");
+        sendmap.put("content", "");
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        httpThreadString.interrupt();
+        scheduleTaskExecutor.shutdown();
+    }
+    private void CreateHandler() {
+        getMessHandler=new android.os.Handler(){
+            @Override
+            public void handleMessage(android.os.Message msg) {
+                super.handleMessage(msg);
+                Bundle b=msg.getData();
+                String uri=b.getString("state");
+                Log.i("getmess",""+uri);
+                if(uri.contains("uid"))
+                {
+                    Type type = new TypeToken<ArrayList<MyMessage>>() {}.getType();
+                    ArrayList<MyMessage> jsonObjects = new Gson().fromJson(uri, type);
+
+                    for (MyMessage infoitem : jsonObjects)
+                    {
+                        Log.i("Message", "" + infoitem);
+                        TextMessage textMessage = new TextMessage();
+                        textMessage.setText(infoitem.getContent());
+                        textMessage.setAvatarUrl(recicon);//头像
+                        textMessage.setDisplayName(String.valueOf(sendid));
+                        textMessage.setUserId("LP");
+                        SimpleDateFormat sim=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                        Date date = null;
+                        try {
+                            date =sim.parse(infoitem.getSendtime());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        textMessage.setDate(date.getTime());
+                        textMessage.setSource(MessageSource.EXTERNAL_USER);
+                        slyceMessagingFragment.addNewMessage(textMessage);
+                    }
+                }
+            }
+        };
+    }
 }

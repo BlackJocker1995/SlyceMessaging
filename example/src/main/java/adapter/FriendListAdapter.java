@@ -44,11 +44,12 @@ public class FriendListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void network(String url) {
         Type type = new TypeToken<ArrayList<Friend>>() {}.getType();
         ArrayList<Friend> jsonObjects = new Gson().fromJson(url, type);
-
         for (Friend infoitem : jsonObjects)
         {
-            friends.add(0,infoitem);
-            Log.i("Friend", "" + infoitem);
+            if(!friends.contains(infoitem)) {
+                friends.add(0, infoitem);
+                Log.i("Friend", "" + infoitem);
+            }
         }
         Collections.sort(this.friends);
     }
@@ -64,6 +65,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private TextView person;
         private TextView messageNum;
         private int id;
+        private String str_icon;
         private LinearLayout background;
         public ContentViewHolder(final View itemView) {
             super(itemView);
@@ -75,7 +77,8 @@ public class FriendListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onClick(View v) {
                     Intent userActivity = new Intent(itemView.getContext(), SendActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    userActivity.putExtra("ACCEPT", person.getText().toString());
+                    userActivity.putExtra("personid",id);
+                    userActivity.putExtra("icon",str_icon );
                     itemView.getContext().startActivity(userActivity);
                 }
             });
@@ -90,6 +93,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ((ContentViewHolder)holder).id = friends.get(position).getFriendid();
         ((ContentViewHolder)holder).icon.setImageURI(Uri.parse(friends.get(position).getAvatar()));
+        ((ContentViewHolder)holder).str_icon = friends.get(position).getAvatar();
         ((ContentViewHolder) holder).person.setText(friends.get(position).getRemarkname());
         if(friends.get(position).getUnreadmessagesNum()!= 0)((ContentViewHolder) holder).messageNum.setText(String.valueOf(friends.get(position).getUnreadmessagesNum()));
         //not online
