@@ -27,8 +27,4 @@
             android:layout_margin="2dp"
             android:text="添加好友"/>
     </LinearLayout>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/cardList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
 </LinearLayout>
