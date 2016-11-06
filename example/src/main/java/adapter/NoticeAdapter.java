@@ -117,7 +117,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         map.put("method","friendVerify.action");
         map.put("uid", local);
         map.put("tid", net);
-        map.put("approve",approve);
+        map.put("approve",String.valueOf(approve));
         new HttpThreadString(null,null,map, null).start();
     }
 

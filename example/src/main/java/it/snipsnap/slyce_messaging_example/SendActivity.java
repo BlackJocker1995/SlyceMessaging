@@ -40,6 +40,7 @@ public class SendActivity extends AppCompatActivity {
 
     private Map getmap;
     private Map sendmap;
+    private Map localmap;
     private HttpThreadString httpThreadString;
 
     private volatile static int n = 0;
@@ -116,6 +117,10 @@ public class SendActivity extends AppCompatActivity {
         sendmap.put("tid", "" + recid);
         sendmap.put("type", "TEXT");
         sendmap.put("content", "");
+        localmap = new HashMap();
+        sendmap.put("method","getHistory.action");
+        sendmap.put("uid", "" + sendid);
+        sendmap.put("tid", "" + recid);
 
     }
 
