@@ -71,9 +71,6 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="40dp">
-
-
-
                     <android.support.design.widget.TextInputLayout
                         android:textColorHint="#f0f7f4"
                         android:layout_width="match_parent"
@@ -145,15 +142,44 @@
                             android:textCursorDrawable="@drawable/bg_input_cursor_2"
                             android:paddingBottom="2dp"
                             />
-
-
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
+                <LinearLayout
+                    android:paddingStart="50dp"
+                    android:paddingEnd="30dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp">
+                    <android.support.design.widget.TextInputLayout
 
+                        android:textColorHint="#f0f7f4"
+                        android:theme="@style/TextLabel"
+                        android:layout_width="136dp"
+                        android:layout_height="wrap_content">
+                        <EditText
+                            android:textSize="13sp"
+                            android:textColor="#f0f7f4"
+                            android:hint="验证码"
+                            android:id="@+id/et_code"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/selector_bg_edit_2"
+                            android:textCursorDrawable="@drawable/bg_input_cursor_2"
+                            android:paddingBottom="2dp"
+                            />
+                    </android.support.design.widget.TextInputLayout>
+                    <ImageView
+                        android:layout_width="96dp"
+                        android:layout_height="fill_parent"
+                        android:layout_margin="3dp"
+                        android:scaleType="fitXY"
+                        android:id="@+id/image_code"
+                        />
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:layout_gravity="center"
                     >
                     <Button
@@ -163,7 +189,21 @@
                         android:stateListAnimator="@drawable/state_list_animator_z"
                         android:layout_width="100dp"
                         android:layout_height="50dp"
+                        android:layout_margin="4dp"
                         android:text="注册"
+                        android:textColor="#2fa881"
+                        >
+                    </Button>
+                    <Button
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/bt_code"
+                        android:background="@drawable/bt_shape_2"
+                        android:stateListAnimator="@drawable/state_list_animator_z"
+                        android:layout_width="100dp"
+                        android:layout_height="50dp"
+                        android:layout_margin="4dp"
+
+                        android:text="获取验证码"
                         android:textColor="#2fa881"
                         >
                     </Button>

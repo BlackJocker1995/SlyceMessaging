@@ -1,19 +1,27 @@
 package value;
 
 /**
- * Created by rain on 2016/11/3.
+ * Created by rain on 2016/11/5.
  */
-public class User implements Comparable {
+public class User {
+    private String avatar;
+    private int id;
     private String name;
-    private int peopleID;
-    private String icon;
-    private Boolean online;
 
-    public User(String name,int peopleID, String icon, Boolean online) {
-        this.name = name;
-        this.icon = icon;
-        this.peopleID = peopleID;
-        this.online = online;
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -24,33 +32,9 @@ public class User implements Comparable {
         this.name = name;
     }
 
-    public int getPeopleID() {
-        return peopleID;
-    }
-
-    public void setPeopleID(int peopleID) {
-        this.peopleID = peopleID;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public Boolean getOnline() {
-        return online;
-    }
-
-    public void setOnline(Boolean online) {
-        this.online = online;
-    }
-
-    @Override
-    public int compareTo(Object o) {
-        User user=  (User)o;
-        return -1*this.online.compareTo(user.online);
+    public User(String avatar, int id, String name) {
+        this.avatar = avatar;
+        this.id = id;
+        this.name = name;
     }
 }

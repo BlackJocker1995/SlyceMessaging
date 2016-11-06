@@ -3,21 +3,21 @@ package ui.loginAndRegister;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.HashMap;
@@ -28,6 +28,9 @@ import java.util.regex.Pattern;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.snipsnap.slyce_messaging_example.R;
+import netwrok.GetImage;
+import netwrok.HttpThreadString;
+import value.App;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -45,6 +48,12 @@ public class RegisterActivity extends AppCompatActivity {
     EditText et_passwd;
     @Bind(R.id.et_repeatpassword)
     EditText et_repeatpassword;
+    @Bind(R.id.et_code)
+    EditText et_code;
+    @Bind(R.id.bt_code)
+    Button btButton;
+    @Bind(R.id.image_code)
+    ImageView image_code;
 
     public String st_user;
     public String st_username;
@@ -55,13 +64,32 @@ public class RegisterActivity extends AppCompatActivity {
     Map map=new HashMap();
     String st_return="服务器错误";
    private ProgressDialog proDialog;
+    final Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Bundle b = msg.getData();
+            String test=b.getString("state");
+            if(test.contains("state")){
+                animateRevealClose();
+            }
 
+        }
+    };
+
+    private Handler pichandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            Bitmap bitmap = (Bitmap) msg.obj;
+            image_code.setImageBitmap(bitmap);
+            super.handleMessage(msg);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        //this.getWindow().setBackgroundDrawable(R.drawable.bg);  
         returnString="成功了吗？";
         ButterKnife.bind(this);
         ShowEnterAnimation();
@@ -72,60 +100,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        //网络操作i
-        final Handler handler=new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                Bundle b = msg.getData();
-                String test=b.getString("state");
-                if(test.contains("23333")) {
-                    proDialog.dismiss();
-                    Snackbar.make(getWindow().getDecorView(),"注册成功",Snackbar.LENGTH_SHORT).show();
-                    animateRevealClose();
-                }
-                else if(test.contains("100003")){
-                    Snackbar.make(getWindow().getDecorView(),"用户名已经被使用",Snackbar.LENGTH_SHORT).show();
-                    proDialog.dismiss();
-                } else if(test.contains("100013")){
-                    Snackbar.make(getWindow().getDecorView(),"请输入正确验证码",Snackbar.LENGTH_SHORT).show();
-                    proDialog.dismiss();
-                }else if(test.contains("100014")){
-                    Toast.makeText(RegisterActivity.this, "请获取验证", Toast.LENGTH_SHORT).show();
-                    proDialog.dismiss();
-                }else{
-                    Snackbar.make(getWindow().getDecorView(),"网络错误",Snackbar.LENGTH_SHORT).show();
-                }
-            }
-        };
-        final Handler emailhandle=new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                Bundle b = msg.getData();
-                String test=b.getString("state");
-                Log.i("regesttest",""+test);
-
-                if(test.contains("100010")){
-                    Snackbar.make(getWindow().getDecorView(),"请输入正确邮箱",Snackbar.LENGTH_SHORT).show();
-                    proDialog.dismiss();
-                }else if(test.contains("100011")){
-                    Snackbar.make(getWindow().getDecorView(),"网络错误",Snackbar.LENGTH_SHORT).show();
-                    proDialog.dismiss();
-                }else if(test.contains("100012")){
-                    Snackbar.make(getWindow().getDecorView(),"用户已存在",Snackbar.LENGTH_SHORT).show();
-                    proDialog.dismiss();
-                }else if(test.contains("23333")){
-                    Snackbar.make(getWindow().getDecorView(),"验证码已发送",Snackbar.LENGTH_SHORT).show();
-                    proDialog.dismiss();
-                } else{
-                    Snackbar.make(getWindow().getDecorView(),"网络错误",Snackbar.LENGTH_SHORT).show();
-                    proDialog.dismiss();
-                }
-
-            }
-        };
-
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,22 +108,16 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "用户名不能为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(et_user.length()==0){
+                /*if(et_user.length()==0){
                     Toast.makeText(RegisterActivity.this, "昵称不能为空", Toast.LENGTH_SHORT).show();
                     return;
-                }
+                }*/
                 if(et_passwd.length()==0){
                     Toast.makeText(RegisterActivity.this, "密码不能为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(et_repeatpassword.length()==0){
                     Toast.makeText(RegisterActivity.this, "重复密码不能为空", Toast.LENGTH_SHORT).show();
-                    return;
-                }else if(et_repeatpassword.length()<6){
-                    Toast.makeText(RegisterActivity.this, "密码不小于6位", Toast.LENGTH_SHORT).show();
-                    return;
-                }else if(et_repeatpassword.length()>18){
-                    Toast.makeText(RegisterActivity.this, "密码不大于18位", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 st_username=et_username.getText().toString();
@@ -160,14 +128,25 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "2次输入密码不同", Toast.LENGTH_SHORT).show();
                 }
 
-                map.put("reg_mail",st_username);
-                map.put("reg_passwd", st_passwd);
-                map.put("reg_name", st_user);
-                map.put("method", "register.php");
-               // new HttpThreadString(handler,getApplicationContext(),map,proDialog).start();
+                String strCode = et_code.getText().toString();
+                map.put("email",st_username);
+                map.put("password", st_passwd);
+                map.put("code",strCode);
+                map.put("method", "register.action");
+                new HttpThreadString(handler,getApplicationContext(),map,proDialog).start();
                 createProgressBar();
             }
         });
+
+        btButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String pic_url = App.url+"/VServer/image.jsp";
+                new GetImage(pic_url,pichandler,proDialog,getApplicationContext()).start();
+            }
+        });
+
+
     }
 
     public boolean isEmail(String email) {

@@ -29,13 +29,13 @@ public class SearchListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void SetFriend()
     {
 
-        messArrayList.add(new User("张三",1,"https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5",true));
-        messArrayList.add(new User("张三",2,"https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5",false));
-        messArrayList.add(new User("张三",1,"https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5",true));
-        messArrayList.add(new User("张三",1,"https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5",true));
-        messArrayList.add(new User("张三",1,"https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5",true));
-        messArrayList.add(new User("张三",1,"https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5",true));
-        messArrayList.add(new User("张三",1,"https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5",true));
+        messArrayList.add(new User("张三",1,""));
+        messArrayList.add(new User("张三",2,""));
+        messArrayList.add(new User("张三",1,"n.jp5"));
+        messArrayList.add(new User("张三",1,"http5"));
+        messArrayList.add(new User("张三",1,"httc7A5"));
+        messArrayList.add(new User("张三",1,"http0717A5"));
+        messArrayList.add(new User("张三",1,"https:7A5"));
 
     }
 
@@ -47,8 +47,8 @@ public class SearchListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((MessViewHolder)holder).request.setText(messArrayList.get(position).getName()+"#"+messArrayList.get(position).getPeopleID());
-        ((MessViewHolder)holder).id = messArrayList.get(position).getPeopleID();
+        ((MessViewHolder)holder).request.setText(messArrayList.get(position).getName()+"#"+messArrayList.get(position).getName());
+        ((MessViewHolder)holder).id = messArrayList.get(position).getId();
         ((MessViewHolder)holder).text = messArrayList.get(position).getName();
         ((MessViewHolder)holder).position = position;
     }

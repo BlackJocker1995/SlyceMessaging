@@ -30,7 +30,7 @@ import butterknife.OnClick;
 import it.snipsnap.slyce_messaging_example.R;
 import netwrok.HttpThreadString;
 import ui.MainActivity;
-import value.User_test;
+import value.User;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
         //是否记住密码
         if (sp.getBoolean("REM", false)) {
             username.setText(sp.getString("user_name", ""));
-            userpassword.setText(sp.getString("password", ""));
+            userpassword.setText(sp.getString("user_password", ""));
             remember.setChecked(true);
         } else {
             username.setText(sp.getString("user_name", ""));
@@ -99,6 +99,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (remember.isChecked()) {
                     sp.edit().putBoolean("AUTO", true).commit();
+                    sp.edit().putBoolean("REM",true).commit();
                 } else {
                     sp.edit().putBoolean("AUTO", false).commit();
                     sp.edit().putBoolean("REM", false).commit();
@@ -124,10 +125,10 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(i2);
 
                     Gson gson = new Gson();
-                    User_test userinfo = gson.fromJson(test, User_test.class);
+                    User userinfo = gson.fromJson(test, User.class);
 
                     sp.edit().putString("user_password", stPassWord).commit();
-                    sp.edit().putString("user_name", userinfo.getName()).commit();
+                    sp.edit().putString("user_name", stUserName).commit();
                     sp.edit().putInt("user_id", userinfo.getId()).commit();
                     finish();
                 }else{

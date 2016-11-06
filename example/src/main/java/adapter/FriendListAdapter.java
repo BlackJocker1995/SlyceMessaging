@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,7 @@ import java.util.Collections;
 
 import it.snipsnap.slyce_messaging_example.R;
 import it.snipsnap.slyce_messaging_example.SendActivity;
-import netwrok.FriendNet;
-import value.Friends;
+import value.Friend;
 
 /**
  * Created by rain on 2016/4/13.
@@ -32,37 +32,25 @@ public class FriendListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private LayoutInflater mLayoutInflater;
     private Context mContext;
-    public ArrayList<Friends> friends;
+    public ArrayList<Friend> friends;
     private SharedPreferences sp;
 
     public FriendListAdapter(Context context) {
-        SetFriend();
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
-        Collections.sort(this.friends);
-    }
-
-    private void SetFriend()
-    {
-        friends=new ArrayList<Friends>();
-        friends.add(new Friends("张三",1,"https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5",true,1));
-        friends.add(new Friends("张三",2,"https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5",false,2));
-        friends.add(new Friends("张三",1,"https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5",true,0));
-        friends.add(new Friends("张三",1,"https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5",true,0));
-        friends.add(new Friends("张三",1,"https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5",true,1));
-        friends.add(new Friends("张三",1,"https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5",true,2));
-        friends.add(new Friends("张三",1,"https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/10989174_799389040149643_722795835011402620_n.jpg?oh=bff552835c414974cc446043ac3c70ca&oe=580717A5",true,0));
+        friends=new ArrayList<Friend>();
 
     }
-
     public void network(String url) {
-        Type type = new TypeToken<ArrayList<Friends>>() {}.getType();
-        ArrayList<Friends> jsonObjects = new Gson().fromJson(url, type);
+        Type type = new TypeToken<ArrayList<Friend>>() {}.getType();
+        ArrayList<Friend> jsonObjects = new Gson().fromJson(url, type);
 
-        for (Friends infoitem : jsonObjects)
+        for (Friend infoitem : jsonObjects)
         {
             friends.add(0,infoitem);
+            Log.i("Friend", "" + infoitem);
         }
+        Collections.sort(this.friends);
     }
     //判断当前item类型
     @Override
@@ -75,6 +63,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private ImageView icon;
         private TextView person;
         private TextView messageNum;
+        private int id;
         private LinearLayout background;
         public ContentViewHolder(final View itemView) {
             super(itemView);
@@ -99,11 +88,12 @@ public class FriendListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((ContentViewHolder)holder).icon.setImageURI(Uri.parse(friends.get(position).getIcon()));
-        ((ContentViewHolder) holder).person.setText(friends.get(position).getName());
-        if(friends.get(position).getMessageNumber()!= 0)((ContentViewHolder) holder).messageNum.setText(String.valueOf(friends.get(position).getMessageNumber()));
+        ((ContentViewHolder)holder).id = friends.get(position).getFriendid();
+        ((ContentViewHolder)holder).icon.setImageURI(Uri.parse(friends.get(position).getAvatar()));
+        ((ContentViewHolder) holder).person.setText(friends.get(position).getRemarkname());
+        if(friends.get(position).getUnreadmessagesNum()!= 0)((ContentViewHolder) holder).messageNum.setText(String.valueOf(friends.get(position).getUnreadmessagesNum()));
         //not online
-        if (friends.get(position).getOnline()==false) {
+        if (friends.get(position).getStatus()==0) {
             ((ContentViewHolder) holder).background.setBackgroundColor(Color.GRAY);
         }
     }

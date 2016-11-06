@@ -2,6 +2,7 @@
 <resources>
     <string name="user_name"></string>
     <string name="password"></string>
+    <integer name="user_id">0</integer>
     <bool name="AUTO">false</bool>
     <bool name="REM">false</bool>
 

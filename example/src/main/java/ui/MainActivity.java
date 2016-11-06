@@ -8,7 +8,6 @@ import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
-
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,20 +18,15 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import adapter.FriendListAdapter;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.snipsnap.slyce_messaging_example.R;
-import netwrok.FriendNet;
+import netwrok.HttpThreadString;
 import widget.SimpleDividerItemDecoration;
 
 /**
@@ -59,7 +53,7 @@ public class MainActivity extends AppCompatActivity
             Bundle bundler=msg.getData();
             String url=bundler.getString("state");
             Log.i("friendsList", "" + url);
-            if(url.contains("college_notice_id")) {
+            if(url.contains("friendid")) {
                 friendListAdapter.network(url);
                 friendListAdapter.notifyDataSetChanged();
             }else{
@@ -85,6 +79,7 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
         friendListAdapter=new FriendListAdapter(this);
         mRecyclerView.setAdapter(friendListAdapter);//设置Adapter
+        onRefresh();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -97,6 +92,13 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void onRefresh() {
+        int stid = sp.getInt("user_id",0);
+        Map map=new HashMap();
+        map.put("method", "friendList.action");
+        map.put("id",String.valueOf(stid));
+        new HttpThreadString(handler,MainActivity.this,map, null).start();
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -179,5 +181,7 @@ public class MainActivity extends AppCompatActivity
         startActivity(new Intent(MainActivity.this, clazz));
         return true;
     }
+
+
 }
 
