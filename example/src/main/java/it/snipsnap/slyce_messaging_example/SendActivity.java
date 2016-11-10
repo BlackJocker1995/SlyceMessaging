@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -24,7 +25,9 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 import it.slyce.messaging.SlyceMessagingFragment;
+import it.slyce.messaging.listeners.LoadMoreMessagesListener;
 import it.slyce.messaging.listeners.UserSendsMessageListener;
+import it.slyce.messaging.message.Message;
 import it.slyce.messaging.message.MessageSource;
 import it.slyce.messaging.message.TextMessage;
 import netwrok.HttpThreadString;
@@ -42,15 +45,16 @@ public class SendActivity extends AppCompatActivity {
     private Map sendmap;
     private Map localmap;
     private HttpThreadString httpThreadString;
+    private HttpThreadString getHishttpThreadString;
 
     private volatile static int n = 0;
     private Handler getMessHandler;
+    private Handler hisMessHandler;
+
     ScheduledExecutorService scheduleTaskExecutor;
-
     SlyceMessagingFragment slyceMessagingFragment;
-
+    private List<Message> hismesslist;
     private boolean hasLoadedMore;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,8 +66,8 @@ public class SendActivity extends AppCompatActivity {
         this.sendid = sp.getInt("user_id", -1);
         this.recicon = intent.getStringExtra("icon");
         this.sendicon = sp.getString("user_icon", "");
-        hasLoadedMore = false;
-
+        hismesslist=new ArrayList<>();
+        hasLoadedMore=false;
         CreateMap();
         CreateHandler();
 
@@ -73,15 +77,17 @@ public class SendActivity extends AppCompatActivity {
         slyceMessagingFragment.setDefaultDisplayName("user");//显示默认名字
         slyceMessagingFragment.setDefaultUserId(sp.getString("user_name", ""));//userid
 
+        getHishttpThreadString = new HttpThreadString(hisMessHandler, SendActivity.this,localmap , null);
+        getHishttpThreadString.start();
+
+
         slyceMessagingFragment.setOnSendMessageListener(new UserSendsMessageListener() {
             @Override
             public void onUserSendsTextMessage(String text) {
                 //发送信息
                 Log.d("inf", "******************************** " + text);
                 sendmap.put("content", text);
-                HttpThreadString send = new HttpThreadString(null, SendActivity.this, sendmap, null);
-                send.start();
-                // sendMessage(text);
+                new HttpThreadString(null, SendActivity.this, sendmap, null).start();
             }
 
             @Override
@@ -90,16 +96,20 @@ public class SendActivity extends AppCompatActivity {
                 Log.d("inf", "******************************** " + imageUri);
             }
         });
-//        slyceMessagingFragment.setLoadMoreMessagesListener(new LoadMoreMessagesListener() {
-//            @Override
-//            public List<Message> loadMoreMessages() {
-//               List<Message> list  =new ArrayList<Message>();
-//                list.add(new TextMessage());
-//                return list;
-//            }
-//        });
-        slyceMessagingFragment.setMoreMessagesExist(false);
-
+        slyceMessagingFragment.setLoadMoreMessagesListener(new LoadMoreMessagesListener() {
+            @Override
+            public List<Message> loadMoreMessages() {
+                if(!hasLoadedMore){
+                    hasLoadedMore=true;
+                    getHishttpThreadString.interrupt();
+                    return hismesslist;
+                }else {
+                    hismesslist=new ArrayList<Message>();
+                    slyceMessagingFragment.setMoreMessagesExist(false);
+                    return hismesslist;
+                }
+            }
+        });
         //lodeNewInfo
         scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
         httpThreadString=new HttpThreadString(getMessHandler,this, getmap, null);
@@ -118,9 +128,9 @@ public class SendActivity extends AppCompatActivity {
         sendmap.put("type", "TEXT");
         sendmap.put("content", "");
         localmap = new HashMap();
-        sendmap.put("method","getHistory.action");
-        sendmap.put("uid", "" + sendid);
-        sendmap.put("tid", "" + recid);
+        localmap.put("method","getHistory.action");
+        localmap.put("uid", "" + sendid);
+        localmap.put("tid", "" + recid);
 
     }
 
@@ -134,11 +144,14 @@ public class SendActivity extends AppCompatActivity {
         getMessHandler=new android.os.Handler(){
             @Override
             public void handleMessage(android.os.Message msg) {
+                if(hasLoadedMore==true){
+                    slyceMessagingFragment.setMoreMessagesExist(false);
+                }
                 super.handleMessage(msg);
                 Bundle b=msg.getData();
                 String uri=b.getString("state");
                 Log.i("getmess",""+uri);
-                if(uri.contains("uid"))
+                if(uri.contains("uid")&&uri.contains("id"))
                 {
                     Type type = new TypeToken<ArrayList<MyMessage>>() {}.getType();
                     ArrayList<MyMessage> jsonObjects = new Gson().fromJson(uri, type);
@@ -162,6 +175,47 @@ public class SendActivity extends AppCompatActivity {
                         textMessage.setSource(MessageSource.EXTERNAL_USER);
                         slyceMessagingFragment.addNewMessage(textMessage);
                     }
+                }
+            }
+        };
+        hisMessHandler=new android.os.Handler(){
+            @Override
+            public void handleMessage(android.os.Message msg) {
+                super.handleMessage(msg);
+                Bundle b=msg.getData();
+                String uri=b.getString("state");
+                Log.i("getmess",""+uri);
+               if(uri.contains("uid")&&uri.contains("uid")){
+
+                    Type type = new TypeToken<ArrayList<MyMessage>>() {}.getType();
+                    ArrayList<MyMessage> jsonObjects = new Gson().fromJson(uri, type);
+
+                    for (MyMessage infoitem : jsonObjects)
+                    {
+                        Log.i("Message", "" + infoitem);
+                        TextMessage textMessage = new TextMessage();
+                        textMessage.setText(infoitem.getContent());
+                        textMessage.setAvatarUrl(recicon);//头像
+                        textMessage.setDisplayName(String.valueOf(sendid));
+                        textMessage.setUserId("LP");
+                        SimpleDateFormat sim=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                        Date date = null;
+                        try {
+                            date =sim.parse(infoitem.getSendtime());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        textMessage.setDate(date.getTime());
+                        if (infoitem.getUid()==sp.getInt("user_id",-1)) {
+                            textMessage.setSource(MessageSource.LOCAL_USER);
+                        }else {
+                            textMessage.setSource(MessageSource.EXTERNAL_USER);
+                        }
+                        hismesslist.add(textMessage);
+                    }
+                   if(!hismesslist.isEmpty()) {
+                       slyceMessagingFragment.setMoreMessagesExist(true);
+                   }
                 }
             }
         };

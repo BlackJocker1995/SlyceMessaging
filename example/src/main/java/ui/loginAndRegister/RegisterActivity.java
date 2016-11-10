@@ -83,7 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Handler pichandler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            Bitmap bitmap = (Bitmap) msg.obj;
+           Bitmap bitmap = (Bitmap) msg.obj;
             image_code.setImageBitmap(bitmap);
             super.handleMessage(msg);
         }
@@ -135,8 +135,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String strCode = et_code.getText().toString();
                 map.put("email",st_username);
                 map.put("password", st_passwd);
-                map.put("code",strCode);
-                map.put("method", "register.action");
+                map.put("method", "androidRegister.action");
                 new HttpThreadString(handler,getApplicationContext(),map,proDialog).start();
                 createProgressBar();
             }
