@@ -113,10 +113,6 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "用户名不能为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(isEmail(et_username.getText().toString())){
-                    Toast.makeText(RegisterActivity.this, "邮箱格式不正确", Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 if(et_user.length()==0){
                     Toast.makeText(RegisterActivity.this, "昵称不能为空", Toast.LENGTH_SHORT).show();
                     return;
@@ -159,12 +155,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    public boolean isEmail(String email) {
-        String str = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
-        Pattern p = Pattern.compile(str);
-        Matcher m = p.matcher(email);
-        return m.matches();
-    }
 
     private void createProgressBar() {
         proDialog = android.app.ProgressDialog.show(RegisterActivity.this, "请等待", "数据传送中！");
