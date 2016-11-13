@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.snipsnap.slyce_messaging_example.R;
 import netwrok.HttpThreadString;
+import ui.loginAndRegister.LoginActivity;
 import widget.SimpleDividerItemDecoration;
 
 /**
@@ -40,6 +42,11 @@ public class MainActivity extends AppCompatActivity
     RecyclerView mRecyclerView;
     @Bind(R.id.drawer_layout)
     DrawerLayout drawer_layout;
+    TextView header_email;
+//    @Bind(R.id.header_name)
+//    TextView header_name;
+//    @Bind(R.id.header_imageView)
+//    ImageView header_image;
     FriendListAdapter friendListAdapter;
 
     private SharedPreferences sp;
@@ -67,17 +74,15 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        sp = this.getSharedPreferences("userinfo", MODE_ENABLE_WRITE_AHEAD_LOGGING);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        sp = this.getSharedPreferences("userinfo", MODE_ENABLE_WRITE_AHEAD_LOGGING);
         mRecyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
-        friendListAdapter=new FriendListAdapter(this);
+        friendListAdapter = new FriendListAdapter(this);
         mRecyclerView.setAdapter(friendListAdapter);//设置Adapter
         onRefresh();
 
@@ -126,6 +131,10 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            intent=new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            sp.edit().putBoolean("AUTO", false).commit();
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

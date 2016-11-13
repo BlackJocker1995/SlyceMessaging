@@ -68,6 +68,7 @@ public class SendActivity extends AppCompatActivity {
         this.sendicon = sp.getString("user_icon", "");
         hismesslist=new ArrayList<>();
         hasLoadedMore=false;
+
         CreateMap();
         CreateHandler();
 
@@ -213,7 +214,7 @@ public class SendActivity extends AppCompatActivity {
                         }
                         hismesslist.add(textMessage);
                     }
-                   if(!hismesslist.isEmpty()) {
+                   if(!hismesslist.isEmpty()&&hasLoadedMore==false) {
                        slyceMessagingFragment.setMoreMessagesExist(true);
                    }
                 }

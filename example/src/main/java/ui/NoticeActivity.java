@@ -57,7 +57,8 @@ public class NoticeActivity extends AppCompatActivity {
         Map map=new HashMap();
         map.put("method", "getFriendRequest.action");
         map.put("uid", String.valueOf(stid));
-        new HttpThreadString(handler,NoticeActivity.this,map, null).start();
+        httpThreadString = new HttpThreadString(handler,NoticeActivity.this,map, null);
+        httpThreadString.start();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -78,6 +79,7 @@ public class NoticeActivity extends AppCompatActivity {
                 Log.i("friendsRequest", "" + url);
                 if(url.contains("type")) {
                     noticeAdapter.network(url);
+                    httpThreadString.interrupt();
                 }else{
                     Snackbar.make(getWindow().getDecorView(), "没有请求", Snackbar.LENGTH_SHORT).show();
                 }

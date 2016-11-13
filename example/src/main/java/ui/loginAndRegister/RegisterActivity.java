@@ -10,6 +10,7 @@ import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.text.InputType;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.util.Log;
@@ -112,10 +113,14 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "用户名不能为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                /*if(et_user.length()==0){
+                if(isEmail(et_username.getText().toString())){
+                    Toast.makeText(RegisterActivity.this, "邮箱格式不正确", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(et_user.length()==0){
                     Toast.makeText(RegisterActivity.this, "昵称不能为空", Toast.LENGTH_SHORT).show();
                     return;
-                }*/
+                }
                 if(et_passwd.length()==0){
                     Toast.makeText(RegisterActivity.this, "密码不能为空", Toast.LENGTH_SHORT).show();
                     return;
@@ -124,6 +129,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "重复密码不能为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                et_username.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 st_username=et_username.getText().toString();
                 st_user=et_user.getText().toString();
                 st_passwd=et_passwd.getText().toString();
@@ -135,6 +141,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String strCode = et_code.getText().toString();
                 map.put("email",st_username);
                 map.put("password", st_passwd);
+                map.put("name",st_user);
                 map.put("method", "androidRegister.action");
                 new HttpThreadString(handler,getApplicationContext(),map,proDialog).start();
                 createProgressBar();
