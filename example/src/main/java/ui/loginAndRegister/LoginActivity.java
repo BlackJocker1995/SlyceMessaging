@@ -39,10 +39,6 @@ public class LoginActivity extends AppCompatActivity {
     EditText username;
     @BindView(R.id.et_password)
     EditText userpassword;
-    @BindView(R.id.bt_go)
-    Button btGo;
-    @BindView(R.id.cv)
-    CardView cv;
     @BindView(R.id.fab)
     FloatingActionButton fab;
     @BindView(R.id.remember_pass)
@@ -55,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
     ProgressDialog proDialog;
     String stUserName;
     String stPassWord;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         CreateHandler();
 
         //自动登陆
-        if(sp.getBoolean("AUTO",false)){
+        if (sp.getBoolean("AUTO", false)) {
             TestLogin(sp.getString("user_name", ""), sp.getString("password", ""));
             remember.setChecked(true);
             login_auto.setChecked(true);
@@ -73,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
         //是否记住密码
         if (sp.getBoolean("REM", false)) {
             username.setText(sp.getString("user_name", ""));
-            String a  = sp.getString("user_name", "");
+            String a = sp.getString("user_name", "");
             userpassword.setText(sp.getString("user_password", ""));
             remember.setChecked(true);
         } else {
@@ -100,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (remember.isChecked()) {
                     sp.edit().putBoolean("AUTO", true).commit();
-                    sp.edit().putBoolean("REM",true).commit();
+                    sp.edit().putBoolean("REM", true).commit();
                 } else {
                     sp.edit().putBoolean("AUTO", false).commit();
                     sp.edit().putBoolean("REM", false).commit();
@@ -112,15 +109,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void CreateHandler() {
-        handler=new Handler(){
+        handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                Bundle b=msg.getData();
-                String test=b.getString("state");
-                Log.i("logintest",""+test);
-                if(test.contains("id"))
-                {
+                Bundle b = msg.getData();
+                String test = b.getString("state");
+                Log.i("logintest", "" + test);
+                if (test.contains("id")) {
                     proDialog.dismiss();
                     Intent i2 = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(i2);
@@ -130,11 +126,13 @@ public class LoginActivity extends AppCompatActivity {
 
                     sp.edit().putString("user_password", stPassWord).commit();
                     sp.edit().putString("user_name", stUserName).commit();
+                    sp.edit().putString("name", userinfo.getName()).commit();
                     sp.edit().putInt("user_id", userinfo.getId()).commit();
-                    sp.edit().putString("user_icon",userinfo.getAvatar());
+
+                    sp.edit().putString("user_icon", userinfo.getAvatar());
                     finish();
-                }else{
-                    Snackbar.make(getWindow().getDecorView(),"登陆失败",Snackbar.LENGTH_SHORT).show();
+                } else {
+                    Snackbar.make(getWindow().getDecorView(), "登陆失败", Snackbar.LENGTH_SHORT).show();
                     proDialog.dismiss();
                 }
             }
@@ -142,11 +140,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean TestLogin(String stUserName, String stPassWord) {
-        Map map=new HashMap();
-        map.put("method","userInfo.action");
+        Map map = new HashMap();
+        map.put("method", "userInfo.action");
         map.put("email", "" + stUserName);
         map.put("password", "" + stPassWord);
-        new HttpThreadString(handler,getApplicationContext(),map,proDialog).start();
+        new HttpThreadString(handler, getApplicationContext(), map, proDialog).start();
         createProgressBar();
         return true;
     }
@@ -166,23 +164,20 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(this, RegisterActivity.class), options.toBundle());
                 break;
             case R.id.bt_go:
-                 stUserName = username.getText().toString();
-                 stPassWord = userpassword.getText().toString();
+                stUserName = username.getText().toString();
+                stPassWord = userpassword.getText().toString();
                 TestLogin(stUserName, stPassWord);
                 break;
         }
     }
+
     private void createProgressBar() {
-        proDialog = android.app.ProgressDialog.show(LoginActivity.this, "请等待", "数据传送中！");
-        Thread thread = new Thread()
-        {
-            public void run()
-            {
-                try
-                {
+        proDialog = ProgressDialog.show(LoginActivity.this, "请等待", "数据传送中！");
+        Thread thread = new Thread() {
+            public void run() {
+                try {
                     sleep(5000);
-                } catch (InterruptedException e)
-                {
+                } catch (InterruptedException e) {
                     // TODO 自动生成的 catch 块
                     e.printStackTrace();
                 }
