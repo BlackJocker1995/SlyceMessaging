@@ -15,4 +15,11 @@
     <string name="about_share_text">NWFChat</string>
     <string name="about_menu_action_share">分享</string>
 
+    <string name="settings_version">版本更新</string>
+    <string name="settings_version_code">版本:</string>
+    <string name="settings_auto_update">自动更新应用</string>
+    <string name="settings_auto_push">推送精选内容</string>
+    <string name="settings_general_settings">常规</string>
+    <string name="settings_push_settings">推送</string>
+
 </resources>

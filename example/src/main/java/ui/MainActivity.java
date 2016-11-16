@@ -140,22 +140,19 @@ public class MainActivity extends AppCompatActivity
 
         switch (id){
             case R.id.tongzhi:
-                intent = new Intent(MainActivity.this,NoticeActivity.class);
-                startActivity(intent);
+                prepareIntent(NoticeActivity.class);
                 break;
             case R.id.nav_zl:
-                intent = new Intent(MainActivity.this,ZiliaoActivity.class);
-                startActivity(intent);
+                prepareIntent(ZiliaoActivity.class);
                 break;
             case R.id.nav_setting:
+                prepareIntent(PrefsActivity.class);
                 break;
             case R.id.nav_about:
-                 intent = new Intent(MainActivity.this,AboutActivity.class);
-                startActivity(intent);
+                prepareIntent(AboutActivity.class);
                 break;
             case R.id.search:
-                intent = new Intent(MainActivity.this,SearchActivity.class);
-                startActivity(intent);
+                prepareIntent(SearchActivity.class);
                 break;
             default:
                 break;
