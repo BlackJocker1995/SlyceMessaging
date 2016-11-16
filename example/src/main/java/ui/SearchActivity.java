@@ -17,8 +17,7 @@ import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.snipsnap.slyce_messaging_example.R;
 import netwrok.HttpThreadString;
@@ -28,11 +27,11 @@ import value.AddInfo;
  * Created by rain on 2016/11/3.
  */
 public class SearchActivity extends AppCompatActivity {
-    @Bind(R.id.search_input)
+    @BindView(R.id.search_input)
     EditText mEditText;
-    @Bind(R.id.search_button)
+    @BindView(R.id.search_button)
     Button mButton;
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
     String search_id;

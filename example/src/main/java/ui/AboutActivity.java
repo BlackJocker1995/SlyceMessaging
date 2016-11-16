@@ -8,10 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
-
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.snipsnap.slyce_messaging_example.R;
 import widget.ShareUtils;
@@ -21,13 +19,13 @@ import widget.ShareUtils;
  */
 public class AboutActivity extends AppCompatActivity {
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @Bind(R.id.tv_version)
+    @BindView(R.id.tv_version)
     TextView mVersionTextView;
-    @Bind(R.id.collapsing_toolbar)
+    @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
-    @Bind(R.id.about_thanks_to)
+    @BindView(R.id.about_thanks_to)
     TextView mThanksTo;
 
 

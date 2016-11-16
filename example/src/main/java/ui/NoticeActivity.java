@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import adapter.NoticeAdapter;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.snipsnap.slyce_messaging_example.R;
 import netwrok.HttpThreadString;
@@ -29,9 +29,9 @@ import netwrok.HttpThreadString;
  */
 public class NoticeActivity extends AppCompatActivity {
 
-    @Bind(R.id.cardList)
+    @BindView(R.id.cardList)
     RecyclerView mRecyclerView;
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
     public NoticeAdapter noticeAdapter;
     private HttpThreadString httpThreadString;
