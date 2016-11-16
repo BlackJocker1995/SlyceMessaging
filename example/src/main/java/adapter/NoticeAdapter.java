@@ -44,7 +44,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((MessViewHolder)holder).request.setText(messArrayList.get(position).getUid()+"  "+"请求加你为好友");
+        ((MessViewHolder)holder).request.setText(messArrayList.get(position).getName()+"#"+messArrayList.get(position).getUid()+" \n"+messArrayList.get(position).getEmail()+"\n"+"请求加你为好友");
         ((MessViewHolder)holder).tid=messArrayList.get(position).getUid();
         ((MessViewHolder)holder).position = position;
     }

@@ -5,19 +5,21 @@ package value;
  */
 public class RequestInfo {
     String uid;
-    String id;
-    String type;
+    String name;
     String send_time;
+    String type;
     String tid;
     String content;
+    String email;
 
-    public RequestInfo(String uid, String id, String type, String send_time, String tid, String content) {
+    public RequestInfo(String uid, String name, String send_time, String type, String tid, String content, String email) {
         this.uid = uid;
-        this.id = id;
-        this.type = type;
+        this.name = name;
         this.send_time = send_time;
+        this.type = type;
         this.tid = tid;
         this.content = content;
+        this.email = email;
     }
 
     public String getUid() {
@@ -28,20 +30,12 @@ public class RequestInfo {
         this.uid = uid;
     }
 
-    public String getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSend_time() {
@@ -50,6 +44,14 @@ public class RequestInfo {
 
     public void setSend_time(String send_time) {
         this.send_time = send_time;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getTid() {
@@ -66,5 +68,13 @@ public class RequestInfo {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

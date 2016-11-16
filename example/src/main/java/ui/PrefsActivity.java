@@ -1,5 +1,6 @@
 package ui;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -30,6 +31,7 @@ public class PrefsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("设置");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     @Override

@@ -97,9 +97,9 @@ public class FriendListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ((ContentViewHolder) holder).person.setText(friends.get(position).getRemarkname());
         if(friends.get(position).getUnreadmessagesNum()!= 0)((ContentViewHolder) holder).messageNum.setText(String.valueOf(friends.get(position).getUnreadmessagesNum()));
         //not online
-        if (friends.get(position).getStatus()==0) {
-            ((ContentViewHolder) holder).background.setBackgroundColor(Color.GRAY);
-        }
+//        if (friends.get(position).getStatus()==0) {
+//            ((ContentViewHolder) holder).background.setBackgroundColor(Color.GRAY);
+//        }
     }
     @Override
     public int getItemCount() {
