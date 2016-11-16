@@ -7,18 +7,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.snipsnap.slyce_messaging_example.R;
 
 
 public class ZiliaoActivity extends AppCompatActivity {
 
-    @BindView(R.id.tv_user)
+    @Bind(R.id.tv_user)
     TextView tvUser;
-    @BindView(R.id.tv_email)
+    @Bind(R.id.tv_email)
     TextView tvEmail;
-    @BindView(R.id.toolbar)
+    @Bind(R.id.toolbar)
     Toolbar toolbar;
     private SharedPreferences sp;
     @Override

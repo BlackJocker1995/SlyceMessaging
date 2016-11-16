@@ -24,7 +24,8 @@ import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
-import butterknife.BindView;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.snipsnap.slyce_messaging_example.R;
 import netwrok.GetImage;
@@ -33,25 +34,25 @@ import value.App;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    @BindView(R.id.fab)
+    @Bind(R.id.fab)
     FloatingActionButton fab;
-    @BindView(R.id.cv_add)
+    @Bind(R.id.cv_add)
     CardView cvAdd;
-    @BindView(R.id.bt_go)
+    @Bind(R.id.bt_go)
     Button next;
-    @BindView(R.id.et_user)
+    @Bind(R.id.et_user)
     EditText et_user;
-    @BindView(R.id.et_username)
+    @Bind(R.id.et_username)
     EditText et_username;
-    @BindView(R.id.et_password)
+    @Bind(R.id.et_password)
     EditText et_passwd;
-    @BindView(R.id.et_repeatpassword)
+    @Bind(R.id.et_repeatpassword)
     EditText et_repeatpassword;
-    @BindView(R.id.et_code)
+    @Bind(R.id.et_code)
     EditText et_code;
-    @BindView(R.id.bt_code)
+    @Bind(R.id.bt_code)
     Button btButton;
-    @BindView(R.id.image_code)
+    @Bind(R.id.image_code)
     ImageView image_code;
 
     public String st_user;

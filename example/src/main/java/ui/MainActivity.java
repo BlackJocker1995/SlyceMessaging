@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import adapter.FriendListAdapter;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.snipsnap.slyce_messaging_example.R;
 import netwrok.HttpThreadString;
@@ -38,9 +38,9 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private RecyclerView.LayoutManager mLayoutManager;
-    @BindView(R.id.cardList)
+    @Bind(R.id.cardList)
     RecyclerView mRecyclerView;
-    @BindView(R.id.drawer_layout)
+    @Bind(R.id.drawer_layout)
     DrawerLayout drawer_layout;
     TextView header_email;
 //    @Bind(R.id.header_name)

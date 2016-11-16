@@ -24,7 +24,7 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import it.snipsnap.slyce_messaging_example.R;
@@ -35,15 +35,15 @@ import value.User;
 
 public class LoginActivity extends AppCompatActivity {
 
-    @BindView(R.id.et_username)
+    @Bind(R.id.et_username)
     EditText username;
-    @BindView(R.id.et_password)
+    @Bind(R.id.et_password)
     EditText userpassword;
-    @BindView(R.id.fab)
+    @Bind(R.id.fab)
     FloatingActionButton fab;
-    @BindView(R.id.remember_pass)
+    @Bind(R.id.remember_pass)
     CheckBox remember;
-    @BindView(R.id.login_auto)
+    @Bind(R.id.login_auto)
     CheckBox login_auto;
 
     private SharedPreferences sp;
