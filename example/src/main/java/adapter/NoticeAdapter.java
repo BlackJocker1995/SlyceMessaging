@@ -99,6 +99,8 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 messArrayList.remove(position);
                 result(local,net,1);
                 materialDialog.dismiss();
+                messArrayList.remove(position);
+                notifyDataSetChanged();
             }
         });
 
@@ -108,6 +110,8 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 messArrayList.remove(position);
                 result(local,net,0);
                 materialDialog.dismiss();
+                messArrayList.remove(position);
+                notifyDataSetChanged();
             }
         });
         materialDialog.show();

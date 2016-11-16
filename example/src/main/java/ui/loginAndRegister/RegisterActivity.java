@@ -62,9 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
     public  String st_passwd;
 
     String st_repeatpassword;
-    String returnString;
     Map map=new HashMap();
-    String st_return="服务器错误";
    private ProgressDialog proDialog;
     final Handler handler=new Handler(){
         @Override
@@ -74,8 +72,11 @@ public class RegisterActivity extends AppCompatActivity {
             String test=b.getString("state");
             Log.i("state",String.valueOf(test.contains("state")));
             if(test.contains("state")){
+                Toast.makeText(RegisterActivity.this,"注册成功",Toast.LENGTH_SHORT).show();
                 proDialog.dismiss();
                 animateRevealClose();
+            }else {
+                Toast.makeText(RegisterActivity.this,"出现错误",Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -94,7 +95,6 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        returnString="成功了吗？";
         ButterKnife.bind(this);
         ShowEnterAnimation();
         fab.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
                 animateRevealClose();
             }
         });
-
+        et_username.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,7 +125,6 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "重复密码不能为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                et_username.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 st_username=et_username.getText().toString();
                 st_user=et_user.getText().toString();
                 st_passwd=et_passwd.getText().toString();

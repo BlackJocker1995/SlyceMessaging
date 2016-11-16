@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -95,10 +95,10 @@ public class SearchActivity extends AppCompatActivity {
                 if(str.equals("1000"))
                 {
                     proDialog.dismiss();
-                    Snackbar.make(getWindow().getDecorView(),"已发送请求",Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(SearchActivity.this,"已发送请求",Toast.LENGTH_SHORT).show();
                 }else if(str.equals("1001")){
                     proDialog.dismiss();
-                    Snackbar.make(getWindow().getDecorView(),"请求失败",Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(SearchActivity.this,"请求失败",Toast.LENGTH_SHORT).show();
                 }
             }
         };

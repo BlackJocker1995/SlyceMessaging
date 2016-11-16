@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -80,7 +81,9 @@ public class NoticeActivity extends AppCompatActivity {
                 if(url.contains("type")) {
                     noticeAdapter.network(url);
                     httpThreadString.interrupt();
+                    finish();
                 }else{
+                    Toast.makeText(NoticeActivity.this,"没有请求",Toast.LENGTH_SHORT).show();
                     Snackbar.make(getWindow().getDecorView(), "没有请求", Snackbar.LENGTH_SHORT).show();
                 }
             }
