@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -29,11 +30,21 @@ public class ZiliaoActivity extends AppCompatActivity {
         WindowManager wm = this.getWindowManager();
         sp = this.getSharedPreferences("userinfo", MODE_ENABLE_WRITE_AHEAD_LOGGING);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("资料");
 
         tvEmail.requestFocus();
         tvEmail.setText(sp.getString("user_name",""));
         tvUser.setText(sp.getString("name",""));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id==R.id.home){
+            finish();
+            return  true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

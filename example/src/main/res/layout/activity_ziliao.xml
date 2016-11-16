@@ -23,37 +23,36 @@
 
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:background="@drawable/ziback2">
                 <TextView
-                    android:layout_width="80dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="20dp"
-                    android:background="#e02299ff"
+                    android:layout_gravity="center_horizontal"
+                   android:text="name"
                     android:id="@+id/tv_user"
-                    android:layout_centerVertical="true"
-                    android:layout_marginTop="117dp"/>
-
+                    android:layout_marginTop="350dp"/>
                 <TextView
-                    android:layout_width="80dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="20dp"
-                    android:background="#e0ff99ff"
+                    android:text="email"
                     android:id="@+id/tv_email"
+                    android:layout_margin="6dp"
                     android:layout_alignTop="@+id/tv_user"
-                    android:gravity="center_vertical"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_gravity="center_horizontal" />
 
                 <TextView
-                    android:layout_width="500dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="苟利国家生死以，岂因祸福避趋之。"
                     android:textSize="20dp"
-                    android:id="@+id/textView8"
-                    android:layout_marginBottom="50dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_toStartOf="@+id/tv_email" />
-            </RelativeLayout>
+                    android:layout_margin="6dp"
+                    android:layout_gravity="center_horizontal"
+                    />
+            </LinearLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -98,30 +97,46 @@
                         android:layout_height="1dp"
                         android:background="#CCCCCC"
                         ></View>
-
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
+                        android:layout_height="64dp"
                         android:background="@android:color/white"
                         android:orientation="vertical">
-
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="30dp"
                             android:layout_marginLeft="15dp"
-                            android:gravity="center_vertical"
+                            android:layout_gravity="center_vertical"
                             android:text="nothing"
                             android:textColor="#DB4E61"
                             android:textSize="14sp"/>
-
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="#CCCCCC"
-                            ></View>
                     </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#CCCCCC"
+                        ></View>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="64dp"
+                        android:background="@android:color/white"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="15dp"
+                            android:gravity="center_vertical"
+                            android:text="and nothing"
+                            android:textColor="#DB4E61"
+                            android:textSize="14sp"/>
 
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#CCCCCC"
+                        ></View>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
@@ -129,13 +144,4 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <!--第三部分：漂浮按钮
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:clickable="true"
-        android:src="@drawable/ic_discuss"
-        app:layout_anchor="@id/appbar"
-        app:layout_anchorGravity="bottom|right|end" />-->
 </android.support.design.widget.CoordinatorLayout>

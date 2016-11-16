@@ -18,8 +18,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,11 +40,6 @@ public class MainActivity extends AppCompatActivity
     RecyclerView mRecyclerView;
     @Bind(R.id.drawer_layout)
     DrawerLayout drawer_layout;
-    TextView header_email;
-//    @Bind(R.id.header_name)
-//    TextView header_name;
-//    @Bind(R.id.header_imageView)
-//    ImageView header_image;
     FriendListAdapter friendListAdapter;
 
     private SharedPreferences sp;
@@ -151,6 +144,8 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
                 break;
             case R.id.nav_zl:
+                intent = new Intent(MainActivity.this,ZiliaoActivity.class);
+                startActivity(intent);
                 break;
             case R.id.nav_setting:
                 break;

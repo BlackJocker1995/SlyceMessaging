@@ -166,7 +166,9 @@ public class LoginActivity extends AppCompatActivity {
             case R.id.bt_go:
                 stUserName = username.getText().toString();
                 stPassWord = userpassword.getText().toString();
-                TestLogin(stUserName, stPassWord);
+                Intent i2 = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(i2);
+               // TestLogin(stUserName, stPassWord);
                 break;
         }
     }
